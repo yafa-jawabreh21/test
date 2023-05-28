@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Quote Filter</title>
+  </head>
+
+  <body>
+    <h1>Quote Filter</h1>
+    <input type="text" id="filterInput" placeholder="Filter quotes">
+    <ul id="quoteList">
+    </ul>
+    <div id="errorMessage"></div>
+  </body>
+
+</html>
+
+
+<script>
+const filterInput = document.getElementById('filterInput');
+const quoteList = document.getElementById('quoteList');
+const errorMessage = document.getElementById('errorMessage');
+
+fetch('https://dummyjson.com/quotes')
+  .then(response => response.json())
+  .then(data => {
+    
+    data.forEach(quote => {
+      const li = document.createElement('li');
+      li.textContent = quote.text;
+      quoteList.appendChild(li);
+    });
+
+
+    filterInput.addEventListener('input', () => {
+      const filterValue = filterInput.value.toLowerCase();
+      quoteList.innerHTML = '';
+      data.forEach(quote => {
+        if (quote.text.toLowerCase().includes(filterValue)) {
+          const li = document.createElement('li');
+          li.textContent = quote.text;
+          quoteList.appendChild(li);
+        }
+      });
+    });
+  })
+  .catch(error => {
+    
+    errorMessage.textContent = 'Failed to fetch quotes from API.';
+    console.error(error);
+  });
+</script>
